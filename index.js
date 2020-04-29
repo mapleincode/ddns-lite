@@ -1,6 +1,4 @@
 const DDNS = require('wm-ddns').AsyncDomain;
-const request = require('request-promise');
-const debug = require('debug')('ddns-plus:ddns');
 
 const { email, password, domain, record, loginId, loginToken } = require('./config.json');
 
