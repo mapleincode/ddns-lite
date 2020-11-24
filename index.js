@@ -2,7 +2,7 @@
  * @Author: maple
  * @Date: 2020-09-18 18:23:15
  * @LastEditors: maple
- * @LastEditTime: 2020-11-24 17:26:42
+ * @LastEditTime: 2020-11-24 17:34:44
  */
 const DDNS = require('wm-ddns').AsyncDomain;
 
@@ -12,9 +12,6 @@ const d = new DDNS(email, password, domain, {
   loginId: loginId,
   loginToken: loginToken
 });
-
-// let r;
-let value;
 
 async function sleep (time) {
   return new Promise(function (resolve) {
