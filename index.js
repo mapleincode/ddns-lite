@@ -2,7 +2,7 @@
  * @Author: maple
  * @Date: 2020-09-18 18:23:15
  * @LastEditors: maple
- * @LastEditTime: 2020-11-24 17:25:46
+ * @LastEditTime: 2020-11-24 17:26:42
  */
 const DDNS = require('wm-ddns').AsyncDomain;
 
@@ -36,6 +36,8 @@ async function main () {
       console.error(err);
     }
   }
+
+  console.table(records.map(r => r.toJSON()));
 
   if (!records.length) {
     await sleep(60);
