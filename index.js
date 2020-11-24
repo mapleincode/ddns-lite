@@ -2,11 +2,11 @@
  * @Author: maple
  * @Date: 2020-09-18 18:23:15
  * @LastEditors: maple
- * @LastEditTime: 2020-11-24 17:24:14
+ * @LastEditTime: 2020-11-24 17:25:46
  */
 const DDNS = require('wm-ddns').AsyncDomain;
 
-const { email, password, domain, _record, loginId, loginToken } = require('./config.json');
+const { email, password, domain, record: _record, loginId, loginToken } = require('./config.json');
 
 const d = new DDNS(email, password, domain, {
   loginId: loginId,
