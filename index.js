@@ -2,7 +2,7 @@
  * @Author: maple
  * @Date: 2020-09-18 18:23:15
  * @LastEditors: maple
- * @LastEditTime: 2020-11-24 17:07:28
+ * @LastEditTime: 2020-11-24 17:24:14
  */
 const DDNS = require('wm-ddns').AsyncDomain;
 
@@ -13,32 +13,53 @@ const d = new DDNS(email, password, domain, {
   loginToken: loginToken
 });
 
-let r;
+// let r;
 let value;
 
-const records = [].concat(_record);
+async function sleep (time) {
+  return new Promise(function (resolve) {
+    setTimeout(() => {
+      resolve();
+    }, time * 1000);
+  });
+}
 
-for (const record of records) {
-  setInterval(async () => {
-    if (!r) {
-      try {
-        r = await d.recordByNameAsync(record);
-      } catch (err) {
-        console.log('获取 record 失败');
-        console.error(err);
-      }
-    }
-
+async function main () {
+  const recordDatas = [].concat(_record);
+  const records = [];
+  let errStatus = false;
+  for (const recordData of recordDatas) {
     try {
-      await r.ddnsAsync();
+      records.push(await d.recordByNameAsync(recordData));
     } catch (err) {
-      console.log('更新 ddns 失败');
+      errStatus = true;
       console.error(err);
     }
+  }
 
-    if (value !== r.value) {
-      console.log('更新 ddns 成功: ' + r.value);
-      value = r.value;
+  if (!records.length) {
+    await sleep(60);
+    process.exit(1);
+  }
+
+  if (errStatus) {
+    setTimeout(() => {
+      process.exit(0); // 30 分钟自动重启
+    }, 60 * 30 * 1000);
+  }
+
+  while (true) {
+    for (const record of records) {
+      const oldIP = record.value;
+      await record.ddnsAsync();
+      if (oldIP !== record.value) {
+        console.log(record.name + ' ip 已经更换');
+      } else {
+        console.log(record.name + ' ip 未更换');
+      }
     }
-  }, 1000 * 60);
+    await sleep(60);
+  }
 }
+
+main();
